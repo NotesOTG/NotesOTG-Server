@@ -14,7 +14,9 @@ namespace NotesOTG_Server.Services.Data.Impl
 {
     public class NotesService : Service<Notes>
     {
-
+        /**
+         * Work on retreiving notes like every 5 seconds 
+         **/
         private readonly UserService _userService;
 
         public NotesService(DatabaseContext conext, ILogger<NotesService> logger, UserService userService) : base(conext, logger)

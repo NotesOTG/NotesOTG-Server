@@ -83,9 +83,6 @@ namespace NotesOTG_Server.Services
             {
                 await roleService.AddUserToRole(notesUser, RoleType.User);
                 await emailTokenService.GenerateEmailVerificationToken(notesUser.Email);
-                /*Guid guid = Guid.NewGuid();
-                var emailToken = Convert.ToBase64String(guid.ToByteArray());
-                new EmailVerificationTemplate(notesUser.Email, emailToken).PrepareAndSend();*/
                 return new RegisterResponse {Success = true};
             }
             

@@ -24,5 +24,11 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Data\vivid-bond-307003-2041f21c86a4.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   
 </Project>

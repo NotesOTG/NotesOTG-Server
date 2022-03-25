@@ -11,8 +11,8 @@ using NotesOTG_Server.Models.Contexts;
 namespace NotesOTG_Server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220321053834_added public id to Notes")]
-    partial class addedpublicidtoNotes
+    [Migration("20220323070624_First migiration")]
+    partial class Firstmigiration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

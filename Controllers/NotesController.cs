@@ -18,13 +18,13 @@ namespace NotesOTG_Server.Controllers
         {
             this.notesService = notesService;
         }
-
+/*
         [Authorize]
         [HttpGet("")]
         public async Task<List<NoteResponse>> Index()
         {
             return await notesService.GetAllNotes();
-        }
+        }*/
 
         [Authorize]
         [HttpPost("addNote")]

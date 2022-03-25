@@ -11,6 +11,9 @@
 *.sln.docstates
 .vscode
 
+./appsettings.json
+./Data
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -339,3 +342,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/Data

@@ -53,6 +53,8 @@ namespace NotesOTG_Server.Services.Data.Impl.Tokens
             var tokeOptions = new JwtSecurityToken(
                 issuer: "https://localhost:44361",
                 audience: "http://localhost:4200",
+                /*                issuer: "http://notesotg.com/api",
+                                audience: "https://notesotg.com",*/
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(5),
                 signingCredentials: signinCredentials

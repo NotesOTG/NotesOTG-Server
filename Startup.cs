@@ -15,6 +15,7 @@ using System.Text;
 using NotesOTG_Server.Services.Data.Impl.Tokens;
 using NotesOTG_Server.Services.Data.Impl;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace NotesOTG_Server
 {
@@ -32,11 +33,19 @@ namespace NotesOTG_Server
         {
             services.AddControllers();
 
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            string connectionString = "testing";
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
+
+            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+            {
+                builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowAnyOrigin();
+            }));
 
             services.AddIdentity<NotesUser, IdentityRole>(options =>
                 {
@@ -62,10 +71,11 @@ namespace NotesOTG_Server
                 .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication(opt => {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+                services.AddAuthentication(opt => {
+                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+
                .AddJwtBearer(options =>
                {
                    options.TokenValidationParameters = new TokenValidationParameters
@@ -79,6 +89,8 @@ namespace NotesOTG_Server
 
                        ValidIssuer = "https://localhost:44361",
                        ValidAudience = "http://localhost:4200",
+                       /*                       ValidIssuer = "http://notesotg.com/api",
+                                              ValidAudience = "https://notesotg.com",*/
                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
                    };
                });
@@ -100,8 +112,14 @@ namespace NotesOTG_Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://notesotg.com", "http://localhost:4200").AllowCredentials());
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
+            app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://notesotg.com", "http://localhost:4200").AllowCredentials());
+            //app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://notesotg.com", "https://www.notesotg.com").AllowCredentials());
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();

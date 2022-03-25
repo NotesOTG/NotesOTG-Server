@@ -17,7 +17,9 @@ namespace NotesOTG_Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).ConfigureServices(services =>
+                    webBuilder.UseUrls("http://localhost:8082");
+                })
+                .ConfigureServices(services =>
                 {
                     services.AddHostedService<TimedEmailService>();
                 });
