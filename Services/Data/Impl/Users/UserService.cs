@@ -125,8 +125,10 @@ namespace NotesOTG_Server.Services
                         //HostedDomain = "https://notesotg.com"
                     });
             }
-            catch
+            catch(InvalidJwtException e)
             {
+                
+                Console.WriteLine(e.ToString());
                 return new LoginResponse {Success = false};
             }
             return await GetOrCreateExternalUser("Google", payload.Subject, payload.Email, payload.EmailVerified);
@@ -144,6 +146,7 @@ namespace NotesOTG_Server.Services
                 var emailVerified = await userManager.IsEmailConfirmedAsync(user);
                 return new LoginResponse {Success = true, Email = user.Email, Token = token, RefreshToken = refreshToken, Roles = roles, HasPassword = hasPassword, EmailVerified = emailVerified };
             }
+            Console.WriteLine("USer is: {0}" + user);
 
             user = await userManager.FindByEmailAsync(email);
             if (user == null)
@@ -208,7 +211,6 @@ namespace NotesOTG_Server.Services
         {
 
             var email = httpContext.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
-            Console.WriteLine(email);
             var user = await userManager.FindByEmailAsync(email);
             return user;
         }

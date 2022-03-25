@@ -33,7 +33,7 @@ namespace NotesOTG_Server
         {
             services.AddControllers();
 
-            string connectionString = "testing";
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
@@ -86,12 +86,9 @@ namespace NotesOTG_Server
                        ValidateIssuerSigningKey = true,
                        RequireExpirationTime = true,
                        ClockSkew = TimeSpan.Zero,//add five minute grace period by default
-
-                       ValidIssuer = "https://localhost:44361",
-                       ValidAudience = "http://localhost:4200",
-                       /*                       ValidIssuer = "http://notesotg.com/api",
-                                              ValidAudience = "https://notesotg.com",*/
-                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+                       ValidIssuer = Configuration["JWT-Options:Issuer"],
+                       ValidAudience = Configuration["JWT-Options:Audience"],
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT-Options:SecretKey"]))
                    };
                });
 
@@ -117,8 +114,8 @@ namespace NotesOTG_Server
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
-            app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://notesotg.com", "http://localhost:4200").AllowCredentials());
-            //app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://notesotg.com", "https://www.notesotg.com").AllowCredentials());
+            //app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://notesotg.com", "http://localhost:4200").AllowCredentials());
+            app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://notesotg.com", "https://www.notesotg.com").AllowCredentials());
             
             app.UseHttpsRedirection();
 

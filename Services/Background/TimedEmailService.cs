@@ -86,12 +86,12 @@ namespace NotesOTG_Server.Services.Background
         
         private async Task<bool> GetCredential(string email)
         {
-            var file = await File.ReadAllTextAsync("./Data/vivid-bond-307003-2041f21c86a4.json");
+            var file = await File.ReadAllTextAsync("./Data/skilful-sensor-345209-53d456e1f7e0.json");
             //var file = await File.ReadAllTextAsync("C:/Users/wante/Desktop/vivid-bond-307003-2041f21c86a4.json");
             var jsonObject = JObject.Parse(file);
 
             credential = new ServiceAccountCredential(new ServiceAccountCredential
-                .Initializer("admin-796@vivid-bond-307003.iam.gserviceaccount.com")
+                .Initializer("admin-282@skilful-sensor-345209.iam.gserviceaccount.com")
                 {
                     // Note: other scopes can be found here: https://developers.google.com/gmail/api/auth/scopes
                     Scopes = new[] { "https://mail.google.com/" },

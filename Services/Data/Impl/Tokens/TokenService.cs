@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using NotesOTG_Server.Models;
@@ -14,8 +15,12 @@ namespace NotesOTG_Server.Services.Data.Impl.Tokens
 {
     public class TokenService: Service<RefreshToken>
     {
-        public TokenService(DatabaseContext context, ILogger<TokenService> logger) : base(context, logger)
+
+        private readonly IConfiguration Configuration;
+
+        public TokenService(DatabaseContext context, ILogger<TokenService> logger, IConfiguration configuration) : base(context, logger)
         {
+            Configuration = configuration;
         }
 
         public async Task<RefreshToken> FindByToken(string refreshToken)
@@ -43,7 +48,7 @@ namespace NotesOTG_Server.Services.Data.Impl.Tokens
 
         public string GeneratePrimaryToken(string userId, string email)
         {
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT-Options:SecretKey"]));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
@@ -51,12 +56,10 @@ namespace NotesOTG_Server.Services.Data.Impl.Tokens
                 new Claim(ClaimTypes.Email, email)
             };
             var tokeOptions = new JwtSecurityToken(
-                issuer: "https://localhost:44361",
-                audience: "http://localhost:4200",
-                /*                issuer: "http://notesotg.com/api",
-                                audience: "https://notesotg.com",*/
+                issuer: Configuration["JWT-Options:Issuer"],
+                audience: Configuration["JWT-Options:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(Double.Parse(Configuration["JWT-Options:ExpireTime"])),
                 signingCredentials: signinCredentials
             );
             return new JwtSecurityTokenHandler().WriteToken(tokeOptions);

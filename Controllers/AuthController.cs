@@ -50,7 +50,6 @@ namespace NotesOTG_Server.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> CheckEmail(string email)
         {
-            Console.WriteLine("Got a request for email: {0}", email);
             return Ok(await userService.EmailCheck(email));
         }
 
@@ -73,7 +72,6 @@ namespace NotesOTG_Server.Controllers
         {
             if (!string.IsNullOrWhiteSpace(refreshToken))
             {
-                Console.WriteLine("This is trying to logout");
                 var tokenSearch = await tokenService.FindByToken(refreshToken);
                 if (tokenSearch != null)
                 {
