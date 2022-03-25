@@ -11,7 +11,7 @@
 *.sln.docstates
 .vscode
 
-./appsettings.json
+appsettings.json
 ./Data
 
 # User-specific files (MonoDevelop/Xamarin Studio)
